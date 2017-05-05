@@ -10,6 +10,7 @@ ALTER PROC insertRooms
       INSERT INTO Room VALUES ('A-5');
       INSERT INTO Room VALUES ('A-6');
       INSERT INTO Room VALUES ('A-7');
+      INSERT INTO Room VALUES ('B-1');
     END TRY
     BEGIN CATCH
       SELECT ERROR_MESSAGE() AS ErrorMessage;

@@ -2,6 +2,10 @@
 ALTER PROC insertPresentation @speaker VARCHAR(255), @presentation VARCHAR(255)
   AS
   BEGIN
+
+    -- Note!! If the speaker and class do not exist in the tables, this procedure will select a random event
+    -- for the presentation and speaker to be assigned to.
+
     BEGIN TRY
 
       DECLARE @count integer = 1,
@@ -32,8 +36,7 @@ ALTER PROC insertPresentation @speaker VARCHAR(255), @presentation VARCHAR(255)
 
           -- If there is a first name and last name
 
-          select @firstName;
-          select @lastName;
+          DECLARE @randomPresentation bit = 0;
 
           IF EXISTS (SELECT * FROM Person WHERE firstName=@firstName AND lastName=@lastName)
             BEGIN
@@ -52,11 +55,15 @@ ALTER PROC insertPresentation @speaker VARCHAR(255), @presentation VARCHAR(255)
 
                       -- If the presentation exists.
 
+                      SELECT * FROM Person;
+
                       DECLARE @idPresentation integer = (SELECT idPresentation FROM Presentation WHERE title=@presentation
                                                         intersect
                                                         SELECT idPresentation FROM PresenterPresentationMapping WHERE idPresenter = (SELECT idPerson FROM Person WHERE firstName=@firstName AND lastName=@lastName));
 
                       EXEC insertPresentationIntoSchedule @idPerson, @idPresentation;
+
+                      SET @randomPresentation = 1;
 
                     END
                 END
@@ -65,6 +72,24 @@ ALTER PROC insertPresentation @speaker VARCHAR(255), @presentation VARCHAR(255)
             END
           ELSE
             RAISERROR('ERROR (insertPresentation): Speaker has not been inserted into the Persons table', 1, 1);
+
+          IF @randomPresentation = 0
+            BEGIN
+
+              DECLARE @randomEvent varchar(255) = (SELECT TOP 1 Event.eventCity FROM Event ORDER BY NEWID());
+
+              EXEC insertPersonAndPresentation @firstName, @lastName, @presentation, @randomEvent;
+
+              DECLARE @idNewPresentation integer = (SELECT idPresentation FROM Presentation WHERE title=@presentation
+                                                intersect
+                                                SELECT idPresentation FROM PresenterPresentationMapping WHERE idPresenter = (SELECT idPerson FROM Person WHERE firstName=@firstName AND lastName=@lastName)),
+                      @idNewPerson integer = (SELECT idPerson FROM Person WHERE firstName=@firstName AND lastName=@lastName);
+
+              SELECT @idNewPresentation;
+
+              EXEC insertPresentationintoSchedule @idNewPerson, @idNewPresentation;
+
+            END
         END
     END TRY
     BEGIN CATCH
