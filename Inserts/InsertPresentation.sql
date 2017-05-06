@@ -30,7 +30,7 @@ ALTER PROC insertPresentation @speaker VARCHAR(255), @presentation VARCHAR(255)
       END
 
       IF @valid = 0
-          RAISERROR('ERROR (insertPresentation): Speaker needs a first name and last name.', 1, 1);
+          RAISERROR('ERROR (insertPresentation): Speaker needs a first name and last name separated by a space. Example: David Hertel.', 16, 16);
       ELSE
         BEGIN
 
