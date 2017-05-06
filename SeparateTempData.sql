@@ -15,6 +15,8 @@ ALTER PROC separateTempData
       BEGIN
 
         INSERT INTO Presentation (title, location) VALUES ((SELECT presentationTitle FROM TemporaryTable WHERE idTempTable=(@count + 1)), (SELECT event FROM TemporaryTable WHERE idTempTable=(@count + 1)));
+        INSERT INTO PresentationDifficultyMapping (idPresentation, idClassDifficulty) VALUES ((SELECT TOP 1 idPresentation FROM Presentation ORDER BY idPresentation DESC), (SELECT idClassDifficulty FROM ClassDifficulty WHERE difficulty=(SELECT difficulty FROM TemporaryTable WHERE idTempTable=@count + 1)));
+        INSERT INTO PresentationTrackMapping VALUES ((SELECT TOP 1 Track.idTrack FROM Track ORDER BY NEWID()), (SELECT TOP 1 idPresentation FROM Presentation ORDER BY idPresentation DESC));
 
         INSERT INTO PresenterPresentationMapping (idPresentation, idPresenter)
         VALUES ((SELECT TOP 1 idPresentation FROM Presentation ORDER BY idPresentation DESC),

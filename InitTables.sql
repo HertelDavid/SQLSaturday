@@ -5,6 +5,7 @@ EXEC createTables;
 
 --Initialize primary data.
 
+EXEC insertTracks;
 EXEC insertRooms;
 EXEC insertTimeSlots;
 EXEC insertRoles;
