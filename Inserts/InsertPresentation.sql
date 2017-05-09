@@ -76,7 +76,8 @@ ALTER PROC insertPresentation @speaker VARCHAR(255), @presentation VARCHAR(255)
           IF @randomPresentation = 0
             BEGIN
 
-              DECLARE @randomEvent varchar(255) = (SELECT TOP 1 Event.eventCity FROM Event ORDER BY NEWID());
+              DECLARE @randomEvent varchar(255) = (SELECT TOP 1 Event.eventCity FROM Event ORDER BY NEWID()),
+                      @randomTrack varchar(255) = (SELECT TOP 1 Track.idTrack FROM Track ORDER BY NEWID());
 
               EXEC insertPersonAndPresentation @firstName, @lastName, @presentation, @randomEvent;
 
@@ -88,6 +89,8 @@ ALTER PROC insertPresentation @speaker VARCHAR(255), @presentation VARCHAR(255)
               SELECT @idNewPresentation;
 
               EXEC insertPresentationintoSchedule @idNewPerson, @idNewPresentation;
+
+              INSERT INTO PresentationTrackMapping VALUES (@randomTrack, @idNewPresentation);
 
             END
         END

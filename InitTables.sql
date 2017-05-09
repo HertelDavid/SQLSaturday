@@ -7,6 +7,7 @@ EXEC createTables;
 
 EXEC insertTracks;
 EXEC insertRooms;
+EXEC insertSponsors;
 EXEC insertTimeSlots;
 EXEC insertRoles;
 EXEC insertClassDifficulties;

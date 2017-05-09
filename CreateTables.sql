@@ -10,6 +10,8 @@ ALTER PROCEDURE createTables
     DROP TABLE Schedule;
     DROP TABLE PersonRolesMapping;
 
+
+    DROP TABLE Sponsor;
     DROP TABLE Person;
     DROP TABLE Roles;
     DROP TABLE Event;
@@ -41,7 +43,7 @@ ALTER PROCEDURE createTables
     CREATE TABLE PersonRolesMapping(
       idPersonRoles INT IDENTITY PRIMARY KEY,
       idPerson INT NOT NULL FOREIGN KEY REFERENCES Person(idPerson),
-      idRole INT NOT NULL FOREIGN KEY REFERENCES Roles(idRole)
+      idRole INT NOT NULL FOREIGN KEY REFERENCES Roles(idRole),
       UNIQUE (idPerson, idRole)
     );
 
@@ -81,7 +83,7 @@ ALTER PROCEDURE createTables
 
     CREATE TABLE Track(
       idTrack INT IDENTITY PRIMARY KEY,
-      name VARCHAR(55) NOT NULL UNIQUE,
+      trackName VARCHAR(55) NOT NULL UNIQUE,
     );
 
     CREATE TABLE Schedule(
@@ -90,7 +92,13 @@ ALTER PROCEDURE createTables
       idPresentation INT NOT NULL UNIQUE FOREIGN KEY REFERENCES Presentation(idPresentation),
       idRoom INT NOT NULL FOREIGN KEY REFERENCES Room(idRoom),
       idTimeSlot INT NOT NULL FOREIGN KEY REFERENCES TimeSlot(idTimeSlot),
-      UNIQUE(idSchedule, idRoom, idTimeSlot)
+      UNIQUE(eventSchedule, idRoom, idTimeSlot)
+    );
+
+    CREATE TABLE Sponsor(
+      idSponsor INT IDENTITY PRIMARY KEY,
+      sponsorName VARCHAR(55) NOT NULL,
+      sponsorLevel VARCHAR(55) NOT NULL,
     );
 
     CREATE TABLE PresentationDifficultyMapping (
