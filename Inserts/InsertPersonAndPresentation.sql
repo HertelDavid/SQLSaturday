@@ -11,7 +11,7 @@ ALTER PROC insertPersonAndPresentation @firstName VARCHAR(55), @lastName VARCHAR
 
           INSERT INTO PresenterPresentationMapping VALUES (
             (SELECT TOP 1 idPresentation FROM Presentation ORDER BY idPresentation DESC),
-            (SELECT TOP 1 idPerson FROM Person ORDER BY idPerson DESC)
+            (SELECT idPerson FROM Person WHERE firstName=@firstName AND lastName=@lastName)
           );
         END
       ELSE

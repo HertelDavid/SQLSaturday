@@ -154,6 +154,9 @@
         INSERT INTO TemporaryTable VALUES (	'Why do we shun using tools for DBA job?'	,	'Paresh'	,	'Motiwala'	,	'Intermediate'	,	'Budapest'	);
         INSERT INTO TemporaryTable VALUES (	'Why OLAP? Building SSAS cubes and benefits of OLAP'	,	'Kevin'	,	'Goff'	,	'Intermediate'	,	'Budapest'	);
         INSERT INTO TemporaryTable VALUES (	'You''re Doing It Wrong!!'	,	'Mike'	,	'Walsh'	,	'Intermediate'	,	'Budapest'	);
+        INSERT INTO TemporaryTable VALUES ('Raffle', 'SQLSaturday', '364', 'Non-Technical', 'Kiyv');
+        INSERT INTO TemporaryTable VALUES ('Registrations', 'SQLSaturday', '364', 'Non-Technical', 'Kiyv');
+
 
       END TRY
       BEGIN CATCH

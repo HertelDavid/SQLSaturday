@@ -55,13 +55,33 @@ ALTER PROC insertPresentation @speaker VARCHAR(255), @presentation VARCHAR(255)
 
                       -- If the presentation exists.
 
-                      SELECT * FROM Person;
-
                       DECLARE @idPresentation integer = (SELECT idPresentation FROM Presentation WHERE title=@presentation
                                                         intersect
                                                         SELECT idPresentation FROM PresenterPresentationMapping WHERE idPresenter = (SELECT idPerson FROM Person WHERE firstName=@firstName AND lastName=@lastName));
 
                       EXEC insertPresentationIntoSchedule @idPerson, @idPresentation;
+
+                      SET @randomPresentation = 1;
+
+                    END
+                  ELSE
+                    BEGIN
+
+                      -- The presentation does not exist and needs to be created.
+
+                      select * from Person;
+
+                      DECLARE @eventForNewPresentation varchar(255) = (SELECT TOP 1 Event.eventCity FROM Event ORDER BY NEWID()),
+                              @trackForNewPresentation varchar(255) = (SELECT TOP 1 Track.idTrack FROM Track ORDER BY NEWID());
+
+                      EXEC insertPersonAndPresentation @firstName, @lastName, @presentation, @eventForNewPresentation;
+
+                      DECLARE @idForNewPresentation integer = (SELECT idPresentation FROM Presentation WHERE title=@presentation
+                                                intersect
+                                                SELECT idPresentation FROM PresenterPresentationMapping WHERE idPresenter = (SELECT idPerson FROM Person WHERE firstName=@firstName AND lastName=@lastName));
+
+                      EXEC insertPresentationIntoSchedule @idPerson, @idForNewPresentation;
+                      INSERT INTO PresentationTrackMapping VALUES (@trackForNewPresentation, @idForNewPresentation);
 
                       SET @randomPresentation = 1;
 
